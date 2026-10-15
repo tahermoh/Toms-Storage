@@ -198,7 +198,7 @@ dependencies {
     if(useLib) {
     	compileOnly "dev.emi:emi-neoforge:1.1.7+1.21:api"
 		runtimeOnly "dev.emi:emi-neoforge:1.1.7+1.21"
-	
+
 		implementation "curse.maven:polymorph-388800:5995380"
     } else {
     	//compileOnly files("libs/curios_dummy.jar")
