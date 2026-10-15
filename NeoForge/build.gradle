@@ -129,7 +129,7 @@ sourceSets {
 	main {
 		java {
 			srcDir "src/platform-shared/java"
-			/*if(!useLib)*/exclude "com/tom/storagemod/rei/**"
+			//*if(!useLib)*/exclude "com/tom/storagemod/rei/**"
 			//*if(!useLib)*/exclude "com/tom/storagemod/jei/**"
 			/*if(!useLib)*/exclude "com/tom/storagemod/emi/**"
 			/*if(!useLib)*/exclude "com/tom/storagemod/top/**"
@@ -179,19 +179,19 @@ dependencies {
 	// at runtime, use the full JEI jar
 	runtimeOnly "mezz.jei:jei-26.3-neoforge:31.6.0.25"
 	
-	/*compileOnly('maven.modrinth:sophisticated-core:26.2-1.4.79.2130')
-	compileOnly('maven.modrinth:sophisticated-storage:26.2-1.5.88.1938')*/
+	compileOnly('maven.modrinth:sophisticated-core:26.3-1.5.6.2382')
+	compileOnly('maven.modrinth:sophisticated-storage:26.3-1.5.117.2156')
+	
+	compileOnly "me.shedaniel:RoughlyEnoughItems-api-neoforge:26.3.824"
+	compileOnly "me.shedaniel:RoughlyEnoughItems-default-plugin-neoforge:26.3.824"
+	implementation "me.shedaniel:RoughlyEnoughItems-neoforge:26.3.824"
+	implementation "me.shedaniel.cloth:cloth-config-neoforge:26.3.159"
+	implementation "dev.architectury:architectury-neoforge:22.0.5"
+	
+	runtimeOnly "top.theillusivec4.curios:curios-neoforge:17.0.0-beta.3+26.3"
+	compileOnly "top.theillusivec4.curios:curios-neoforge:17.0.0-beta.3+26.3:api"
     
     if(useLib) {
-        compileOnly "me.shedaniel:RoughlyEnoughItems-api-neoforge:21.11.814"
-	    compileOnly "me.shedaniel:RoughlyEnoughItems-default-plugin-neoforge:21.11.814"
-	    implementation "me.shedaniel:RoughlyEnoughItems-neoforge:21.11.814"
-	    implementation "me.shedaniel.cloth:cloth-config-neoforge:18.0.145"
-        implementation "dev.architectury:architectury-neoforge:16.1.4"
-        
-        runtimeOnly "top.theillusivec4.curios:curios-neoforge:11.0.1+1.21.5"
-        compileOnly "top.theillusivec4.curios:curios-neoforge:11.0.1+1.21.5:api"
-
     	compileOnly "curse.maven:vivecraft-667903:6060497"
     	
     	compileOnly "dev.emi:emi-neoforge:1.1.7+1.21:api"
@@ -201,7 +201,7 @@ dependencies {
 	
     	implementation "curse.maven:the-one-probe-245211:5502323"
     } else {
-    	compileOnly files("libs/curios_dummy.jar")
+    	//compileOnly files("libs/curios_dummy.jar")
     	compileOnly files("libs/vc_dummy.jar")
     	compileOnly files("libs/polymorph_dummy.jar")
     }

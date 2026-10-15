@@ -79,7 +79,7 @@ public class ReiGhostIngredientHandler implements DraggableStackVisitor<Abstract
 		public SlotTarget(AbstractFilteredScreen gui, Slot slot) {
 			this.slot = slot;
 			this.gui = gui;
-			this.area = new Rectangle(gui.getGuiLeft() + slot.x, gui.getGuiTop() + slot.y, 16, 16);
+			this.area = new Rectangle(gui.getLeftPos() + slot.x, gui.getTopPos() + slot.y, 16, 16);
 		}
 
 		@Override

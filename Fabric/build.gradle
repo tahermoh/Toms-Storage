@@ -84,7 +84,7 @@ dependencies {
 	//implementation("io.github.douira:glsl-transformer:2.0.1")
 	//implementation("org.anarres:jcpp:1.4.14")
 	
-	/*implementation "maven.modrinth:trinkets-updated:4.1.0-beta.2+26.2"
+	implementation "maven.modrinth:trinkets-updated:4.2.1+26.3"
 	
 	compileOnly("me.shedaniel:RoughlyEnoughItems-api:${project.rei_version}"){
 		exclude(group: "net.fabricmc.fabric-api")
@@ -101,7 +101,7 @@ dependencies {
 	    exclude(group: "me.shedaniel.cloth")
 	    exclude(group: "dev.architectury")
 	}
-	implementation("dev.architectury:architectury-fabric:21.0.2")*/
+	implementation("dev.architectury:architectury-fabric:22.0.4")
 	
     /*
     if(useLib) {
@@ -122,7 +122,7 @@ sourceSets {
 		java {
 			srcDir "../NeoForge/src/platform-shared/java"
 			//*if(!useLib)*/exclude "com/tom/storagemod/jei/**"
-			/*if(!useLib)*/exclude "com/tom/storagemod/rei/**"
+			//*if(!useLib)*/exclude "com/tom/storagemod/rei/**"
 			/*if(!useLib)*/exclude "com/tom/storagemod/emi/**"
 			//*if(!useLib)*/exclude "com/tom/storagemod/jade/**"
 			//*if(!useLib)*/exclude "com/tom/storagemod/ModMenu.java"
