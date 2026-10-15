@@ -2,6 +2,7 @@ package com.tom.storagemod;
 
 import java.io.InputStreamReader;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
@@ -13,6 +14,7 @@ import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.networking.v1.ClientLoginNetworking;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.rendering.v1.BlockColorRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
 import net.fabricmc.fabric.api.networking.v1.FriendlyByteBufs;
@@ -21,12 +23,15 @@ import net.irisshaders.iris.pipeline.IrisPipelines;
 import net.irisshaders.iris.pipeline.programs.ShaderKey;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.color.block.BlockTintSource;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.TagValueInput;
 
@@ -34,6 +39,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.renderpearl.api.pipeline.RenderPipeline;
 
+import com.tom.storagemod.block.entity.PaintedBlockEntity;
 import com.tom.storagemod.client.ClientUtil;
 import com.tom.storagemod.client.UnbakedPaintedModel;
 import com.tom.storagemod.network.DataPacket;
@@ -85,6 +91,25 @@ public class StorageModClient implements ClientModInitializer {
 				});
 			}
 		});
+
+		BlockColorRegistry.register((state, level, pos, tintValues) -> {
+			BlockEntity tile = level.getBlockEntity(pos);
+			if(!(tile instanceof PaintedBlockEntity be))return;
+
+			BlockState blockstate = be.getPaintedBlockState();
+			if (blockstate == null || blockstate == Blocks.AIR.defaultBlockState()) {
+				return;
+			}
+			List<BlockTintSource> tintSources = Minecraft.getInstance().getBlockColors().getTintSources(blockstate);
+			int tintSourceCount = tintSources.size();
+			if (tintSourceCount == 0)return;
+
+			for (int i = 0; i < tintSourceCount; i++) {
+				var source = tintSources.get(i);
+				int color = source.colorInWorld(blockstate, level, pos);
+				tintValues.add(color);
+			}
+		}, Content.paintedTrim.get(), Content.invCableFramed.get(), Content.invCableConnectorFramed.get(), Content.invProxy.get());
 
 		LevelRenderEvents.END_MAIN.register(ctx -> {
 			PoseStack ps = ctx.poseStack();

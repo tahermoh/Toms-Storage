@@ -2,8 +2,8 @@ package com.tom.storagemod.inventory;
 
 import java.util.Arrays;
 
-import net.neoforged.neoforge.transfer.EmptyResourceHandler;
 import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.TransferPreconditions;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
@@ -84,10 +84,10 @@ public class PlatformMultiInventoryAccess extends MultiInventoryAccess implement
 
 	private ResourceHandler<ItemResource> getHandler(int i, int invSlot) {
 		ResourceHandler<ItemResource> h = connected.get(i).getPlatformHandler();
-		if (h == null)return EmptyResourceHandler.instance();
+		if (h == null)return EmptyInventory.INSTANCE;
 		if (invSlot < h.size())
 			return h;
-		return EmptyResourceHandler.instance();
+		return EmptyInventory.INSTANCE;
 	}
 
 	@Override
@@ -120,6 +120,8 @@ public class PlatformMultiInventoryAccess extends MultiInventoryAccess implement
 
 	@Override
 	public int insert(int slot, ItemResource resource, int amount, TransactionContext transaction) {
+		TransferPreconditions.checkNonEmptyNonNegative(resource, amount);
+
 		if(calling)return 0;
 		if(slot >= invSize)return 0;
 		calling = true;
@@ -134,6 +136,8 @@ public class PlatformMultiInventoryAccess extends MultiInventoryAccess implement
 
 	@Override
 	public int extract(int slot, ItemResource resource, int amount, TransactionContext transaction) {
+		TransferPreconditions.checkNonEmptyNonNegative(resource, amount);
+
 		if(calling)return 0;
 		if(slot >= invSize)return 0;
 		calling = true;
