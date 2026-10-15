@@ -13,7 +13,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.transfer.EmptyResourceHandler;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 
@@ -32,7 +31,7 @@ public interface PlatformInventoryAccess extends IInventoryAccess {
 
 		@Override
 		public ResourceHandler<ItemResource> get() {
-			return EmptyResourceHandler.instance();
+			return EmptyInventory.INSTANCE;
 		}
 
 		@Override
