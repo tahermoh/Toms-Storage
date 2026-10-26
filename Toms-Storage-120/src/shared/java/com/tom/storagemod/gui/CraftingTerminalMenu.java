@@ -11,6 +11,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.StackedContents;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.ContainerListener;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.ResultContainer;
@@ -242,9 +243,46 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 				var recipe = pinv.player.level().getRecipeManager().byKey(id).orElse(null);
 				if (recipe != null) {
 					new TerminalCraftingFiller((CraftingTerminalBlockEntity) te, pinv.player, sync).placeRecipe(recipe);
+					craftToDestination(recipe, CraftDestination.fromMessage(message), message.getInt("amount"));
 				}
 			}
 		}
+	}
+
+	public static enum CraftDestination {
+		NONE, CURSOR, INVENTORY;
+		public static final CraftDestination[] VALUES = values();
+
+		public static CraftDestination fromMessage(CompoundTag msg) {
+			if (!msg.contains("dest")) return NONE;
+			int d = msg.getByte("dest");
+			if (d < 0 || d >= VALUES.length) return NONE;
+			return VALUES[d];
+		}
+	}
+
+	private void craftToDestination(Recipe<?> recipe, CraftDestination dest, int amount)  {
+		switch (dest) {
+			case NONE -> {}
+			case CURSOR -> {
+				if (isResultOf(recipe)) {
+					clicked(craftingResultSlot.index, 0, ClickType.PICKUP, pinv.player);
+				}
+			}
+			case INVENTORY -> {
+				for (int i = 0; i < amount && isResultOf(recipe); i++) {
+					if (shiftClickItems(pinv.player, craftingResultSlot.index).isEmpty()) {
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	// A partial refill can match a different recipe
+	private boolean isResultOf(Recipe<?> recipe) {
+		Recipe<?> used = craftResult.getRecipeUsed();
+		return craftingResultSlot.hasItem() && used != null && used.getId().equals(recipe.getId());
 	}
 
 	@Override
