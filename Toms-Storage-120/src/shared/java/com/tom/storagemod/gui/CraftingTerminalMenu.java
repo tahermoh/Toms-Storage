@@ -118,6 +118,14 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 
 	@Override
 	public ItemStack shiftClickItems(Player playerIn, int index) {
+		return handleShiftClickItems(playerIn, index, false);
+	}
+
+	public ItemStack batchShiftClickItems(Player playerIn, int index) {
+		return handleShiftClickItems(playerIn, index, true);
+	}
+
+	private ItemStack handleShiftClickItems(Player playerIn, int index, boolean bypassStackLimit) {
 		ItemStack itemstack = ItemStack.EMPTY;
 		Slot slot = this.slots.get(index);
 		if (slot != null && slot.hasItem()) {
@@ -126,7 +134,8 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 			if (index == 0) {
 				if(te == null)return ItemStack.EMPTY;
 
-				if (!((CraftingTerminalBlockEntity)te).canCraft() || !this.moveItemStackTo(itemstack1, 10, 46, true)) {
+				if ((!bypassStackLimit && !((CraftingTerminalBlockEntity)te).canCraft())
+					|| !this.moveItemStackTo(itemstack1, 10, 46, true)) {
 					return ItemStack.EMPTY;
 				}
 
@@ -271,7 +280,7 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 			}
 			case INVENTORY -> {
 				for (int i = 0; i < amount && isResultOf(recipe); i++) {
-					if (shiftClickItems(pinv.player, craftingResultSlot.index).isEmpty()) {
+					if (batchShiftClickItems(pinv.player, craftingResultSlot.index).isEmpty()) {
 						break;
 					}
 				}
