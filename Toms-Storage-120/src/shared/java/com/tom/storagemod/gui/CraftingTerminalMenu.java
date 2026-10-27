@@ -42,6 +42,7 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 	private final ResultContainer craftResult;
 	private Slot craftingResultSlot;
 	private final List<ContainerListener> listeners = Lists.newArrayList();
+	private boolean refillRecipeGrid = true;
 
 	@Override
 	public void addSlotListener(ContainerListener listener) {
@@ -101,7 +102,7 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 		public void onTake(Player thePlayer, ItemStack stack) {
 			this.checkTakeAchievements(stack);
 			if (!pinv.player.getCommandSenderWorld().isClientSide) {
-				((CraftingTerminalBlockEntity) te).craft(thePlayer);
+				((CraftingTerminalBlockEntity) te).handleCraft(thePlayer, refillRecipeGrid);
 			}
 		}
 	}
@@ -275,14 +276,27 @@ public class CraftingTerminalMenu extends StorageTerminalMenu implements IAutoFi
 			case NONE -> {}
 			case CURSOR -> {
 				if (isResultOf(recipe)) {
-					clicked(craftingResultSlot.index, 0, ClickType.PICKUP, pinv.player);
+					try {
+						refillRecipeGrid = false;
+						clicked(craftingResultSlot.index, 0, ClickType.PICKUP, pinv.player);
+					} finally {
+						refillRecipeGrid = true;
+					}
 				}
 			}
 			case INVENTORY -> {
-				for (int i = 0; i < amount && isResultOf(recipe); i++) {
-					if (batchShiftClickItems(pinv.player, craftingResultSlot.index).isEmpty()) {
-						break;
+				try {
+					for (int i = 0; i < amount && isResultOf(recipe); i++) {
+						if (i == amount - 1) {
+							refillRecipeGrid = false;
+						}
+
+						if (batchShiftClickItems(pinv.player, craftingResultSlot.index).isEmpty()) {
+							break;
+						}
 					}
+				} finally {
+					refillRecipeGrid = true;
 				}
 			}
 		}
